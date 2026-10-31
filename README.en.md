@@ -1,6 +1,6 @@
 # Agent-Ops-Architecture
 
-**One person, commanding a team of AI agents.**
+**A top-level design for Distributed Embodied AI — one person, commanding a team of agents, commanding a physical world.**
 
 This repository is the **blueprint** of the Agent Ops trio. It contains **documentation only — no code**.
 It answers *why the system is shaped this way*, not *how to install it*.
@@ -12,51 +12,46 @@ It answers *why the system is shaped this way*, not *how to install it*.
 
 ## The trio
 
-| Repository | Role | In one sentence |
-|---|---|---|
-| [`Agent-Ops-WeCom-Bridge`](https://github.com/Ly-FirmwareLab/Agent-Ops-WeCom-Bridge) | **Control plane** · human ⇄ agent | Turns WeCom into an agent cockpit: live progress, interrupt anytime, dangerous actions stopped first |
-| [`Agent-Ops-Edge-Hub`](https://github.com/Ly-FirmwareLab/Agent-Ops-Edge-Hub) | **Data plane** · agent ⇄ physical world | An MQTT device bus that carries agent commands down to real hardware |
-| **This repo** · `Agent-Ops-Architecture` | **Blueprint** · why | The manifesto, the panorama, and the conventions that tie the other two together |
+| Repository | Plane | In one sentence | Status |
+|---|---|---|---|
+| **This repo** · `Agent-Ops-Architecture` | **Blueprint** | The top-level design for distributed embodied AI, the manifesto, and the human-agent conventions | Public |
+| [`Agent-Ops-WeCom-Bridge`](https://github.com/Ly-FirmwareLab/Agent-Ops-WeCom-Bridge) | **Control plane** · human ⇄ agent | Turns WeCom into an agent cockpit: streaming interaction, progress control, permission interception | Public |
+| [`Agent-Ops-Edge-Hub`](https://github.com/Ly-FirmwareLab/Agent-Ops-Edge-Hub) | **Data plane** · agent ⇄ physical world | An MQTT-based edge bus that turns agent intent into real device actions | Public |
 
-They are not three features — they are **three faces of one architecture**.
+The control plane and the data plane are **fully decoupled** — they never call each other, they only share one set of conventions.
+
+```
+    human  ──chat──▶  [control plane]  ──▶  Agent  ──▶  [data plane]  ──▶  embodied nodes
+```
 
 ---
 
-## The idea in one page
+## The thesis
 
-**Two layers, one human in the middle.**
+**AI is trapped in the digital world.** Model output is tokens, not actions.
 
-```
-Layer 1 · Organization — a chat group
-    human  ──@──▶  Agent A (workspace on a workstation)
-           ──@──▶  Agent B (workspace on a Raspberry Pi)
-           ──@──▶  Agent C (future: edge / cloud)
+There are two common replies, and both fall short:
 
-Layer 2 · Devices — MQTT / HTTP
-    Agent  ──▶  touch panel · robot car · future actuators
-```
+- *Put the model on the device* → not enough compute, slow to iterate, dead when offline.
+- *Expose a cloud API* → the device becomes a networked switch, with no local judgment and no fallback.
 
-**Five conventions**
+Both share the same wrong assumption: **intelligence and body must be the same thing.**
 
-1. **The entry point is chat.** Wherever you are, your workbench is there — no public IP, no dedicated server.
-2. **`@` is routing, and the human is the only dispatcher.** Agents never talk to each other directly — by design, to prevent collisions and collusion.
-3. **An agent = a workspace + a memory + a brain.** Reaching it through another window doesn't make it a different agent.
-4. **Layer capabilities; don't rebuild wheels.** If upstream already has it, use upstream.
-5. **Every action leaves a trace.** Who triggered it, what ran, what came back — always visible.
+Our answer is to **decouple them**:
 
----
+| Layer | Responsibility |
+|---|---|
+| **Cloud** | Model inference, complex planning, capability iteration |
+| **Edge** | A concentrated brain (agents) plus an always-on hub (bus, adapters, alarms) |
+| **End** | Distributed embodied nodes — panels, robots, sensors — each with a small local judgment of its own |
 
-## Why this exists
+Three design principles:
 
-Five mismatches motivated it:
+1. **Central brain, distributed bodies.** Compute is scarce; devices are cheap.
+2. **Narrow channel, hard contract.** Frame caps, idempotent commands, cooldowns, honest timeouts — because physical actions cannot be rolled back.
+3. **Graceful degradation, edge autonomy.** When the brain goes down, devices must keep doing what they already know how to do. **Continuity matters more than intelligence.**
 
-1. **Model capability is locked behind the entry point.** You can run an agent in a terminal, but not from a train.
-2. **Compute got cheap; orchestration didn't.** Three machines, three manual workflows.
-3. **Multi-agent is a trend, but agent-to-agent chatter is a trap** — models reinforce each other's hallucinations, and humans can't see what passed between them.
-4. **Devices get connected, but not *commanded*.** IoT platforms answer "what does the device look like", not "who decides, and who stops a bad decision".
-5. **AI workflow tooling assumes you have a server.** Most individuals stall at step zero.
-
-Read the full argument: [docs/why.md](docs/why.md) (Chinese).
+The acceptance test is one sentence: **unplug the network — can the device still do the few things it already knows?**
 
 ---
 
@@ -64,10 +59,26 @@ Read the full argument: [docs/why.md](docs/why.md) (Chinese).
 
 | Document | What it covers |
 |---|---|
-| [docs/why.md](docs/why.md) | Why this ecosystem exists — the era's pain points |
+| [docs/why.md](docs/why.md) | Why this ecosystem exists — six mismatches of the current era |
 | [docs/manifesto.md](docs/manifesto.md) | The Collaboration Manifesto |
-| [docs/architecture.md](docs/architecture.md) | Panorama: two layers, the star topology, the role table, known limits |
-| [docs/conventions.md](docs/conventions.md) | The five conventions, plus the interaction baseline for a single task |
+| [docs/embodied-ai.md](docs/embodied-ai.md) | Distributed Embodied AI — the top-level design |
+| [docs/architecture.md](docs/architecture.md) | Panorama: cloud/edge/end, star topology, role table, known limits |
+| [docs/conventions.md](docs/conventions.md) | Five conventions and the interaction baseline |
+
+---
+
+## What is actually built
+
+Stated plainly, so the claim and the evidence are on the same page:
+
+- ✅ Brain/body decoupling — running: panel and robot actions are dispatched over MQTT with two-way receipts.
+- ✅ Contracted channel — frame caps, QoS 1 end-to-end, idempotent dedupe, cooldowns, concurrency gate, honest timeouts.
+- ✅ Device isolation — mutual TLS, topic-scoped ACLs, one credential pair per device.
+- 🟡 Edge autonomy — **partial**: device firmware and local entry points survive without the bus; automatic takeover after brain loss is not implemented.
+- ✅ Heterogeneous onboarding — the third device type was added by copying an existing adapter, in half a day.
+- ❌ Production-grade resilience — no redundancy, no SLA, no failure drills.
+
+**This is an architecture position, not a production guarantee.**
 
 ---
 
