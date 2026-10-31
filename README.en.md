@@ -1,6 +1,6 @@
 # Agent-Ops-Architecture
 
-**A top-level design for Distributed Embodied AI — one person, commanding a team of agents, commanding a physical world.**
+**A top-level design for Distributed Embodied AI — one person, commanding a team of agents, driving countless physical nodes.**
 
 This repository is the **blueprint** of the Agent Ops trio. It contains **documentation only — no code**.
 It answers *why the system is shaped this way*, not *how to install it*.

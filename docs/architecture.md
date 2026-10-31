@@ -45,8 +45,8 @@ flowchart TB
     HUB -. "④ 回执 · 状态" .-> A1
 
     CLOUD["☁️ 云 · 模型推理<br/>（Agent 背后的大模型）"]
-    A1 -. "推理调用" .- CLOUD
-    A2 -. "推理调用" .- CLOUD
+    A1 -.->|"推理调用"| CLOUD
+    A2 -.->|"推理调用"| CLOUD
 ```
 
 读这张图只需要三句话：
