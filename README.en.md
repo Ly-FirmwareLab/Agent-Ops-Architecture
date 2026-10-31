@@ -2,6 +2,8 @@
 
 **A top-level design for Distributed Embodied AI — one person, commanding a team of agents, driving countless physical nodes.**
 
+🔗 **The trio** · [🔭 Blueprint (this repo)](https://github.com/Ly-Systems-Lab/Agent-Ops-Architecture) · [🧠 Control plane · WeCom-Bridge](https://github.com/Ly-Systems-Lab/Agent-Ops-WeCom-Bridge) · [🔌 Data plane · Edge-Hub](https://github.com/Ly-Systems-Lab/Agent-Ops-Edge-Hub)
+
 This repository is the **blueprint** of the Agent Ops trio. It contains **documentation only — no code**.
 It answers *why the system is shaped this way*, not *how to install it*.
 
@@ -14,9 +16,9 @@ It answers *why the system is shaped this way*, not *how to install it*.
 
 | Repository | Plane | In one sentence | Status |
 |---|---|---|---|
-| **This repo** · `Agent-Ops-Architecture` | **Blueprint** | The top-level design for distributed embodied AI, the manifesto, and the human-agent conventions | Public |
-| [`Agent-Ops-WeCom-Bridge`](https://github.com/Ly-FirmwareLab/Agent-Ops-WeCom-Bridge) | **Control plane** · human ⇄ agent | Turns WeCom into an agent cockpit: streaming interaction, progress control, permission interception | Public |
-| [`Agent-Ops-Edge-Hub`](https://github.com/Ly-FirmwareLab/Agent-Ops-Edge-Hub) | **Data plane** · agent ⇄ physical world | An MQTT-based edge bus that turns agent intent into real device actions | Public |
+| **This repo** · [`Agent-Ops-Architecture`](https://github.com/Ly-Systems-Lab/Agent-Ops-Architecture) | **Blueprint** | The top-level design for distributed embodied AI, the manifesto, and the human-agent conventions | Public |
+| [`Agent-Ops-WeCom-Bridge`](https://github.com/Ly-Systems-Lab/Agent-Ops-WeCom-Bridge) | **Control plane** · human ⇄ agent | Turns WeCom into an agent cockpit: streaming interaction, progress control, permission interception | Public |
+| [`Agent-Ops-Edge-Hub`](https://github.com/Ly-Systems-Lab/Agent-Ops-Edge-Hub) | **Data plane** · agent ⇄ physical world | An MQTT-based edge bus that turns agent intent into real device actions | Public |
 
 The control plane and the data plane are **fully decoupled** — they never call each other, they only share one set of conventions.
 
@@ -86,7 +88,7 @@ Stated plainly, so the claim and the evidence are on the same page:
 
 Documentation is licensed under **[CC BY 4.0](LICENSE)** — reuse, quote and adapt freely, **with attribution**.
 
-Attribution: **Agent-Ops-Architecture · Ly-FirmwareLab** (with a link back to this repository).
+Attribution: **Agent-Ops-Architecture · Ly-Systems-Lab** (with a link back to this repository).
 
 ---
 

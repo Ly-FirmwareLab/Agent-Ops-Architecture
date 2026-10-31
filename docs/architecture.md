@@ -171,8 +171,8 @@ flowchart LR
 
 | 切面 | 能力 | 由谁实现 |
 |---|---|---|
-| **控制面** | 人 ⇄ Agent：下达意图、看进度、拦危险动作 | [`Agent-Ops-WeCom-Bridge`](https://github.com/Ly-FirmwareLab/Agent-Ops-WeCom-Bridge) |
-| **数据面** | Agent ⇄ 物理世界：设备总线、主题隔离、端侧接入 | [`Agent-Ops-Edge-Hub`](https://github.com/Ly-FirmwareLab/Agent-Ops-Edge-Hub) |
+| **控制面** | 人 ⇄ Agent：下达意图、看进度、拦危险动作 | [`Agent-Ops-WeCom-Bridge`](https://github.com/Ly-Systems-Lab/Agent-Ops-WeCom-Bridge) |
+| **数据面** | Agent ⇄ 物理世界：设备总线、主题隔离、端侧接入 | [`Agent-Ops-Edge-Hub`](https://github.com/Ly-Systems-Lab/Agent-Ops-Edge-Hub) |
 | **总蓝图** | 云 / 边 / 端怎么分层、人站在哪、降级怎么算 | **本仓** |
 
 **控制面与数据面彻底解耦** —— 它们之间不互相调用，只共享同一套约定：
